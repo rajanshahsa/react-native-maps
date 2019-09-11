@@ -40,7 +40,10 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
   private static final int SET_INDOOR_ACTIVE_LEVEL_INDEX = 10;
   private static final int SET_CAMERA = 11;
   private static final int ANIMATE_CAMERA = 12;
-
+private static final int ZOOM_IN = 10;
+  private static final int ZOOM_OUT = 11;
+  private static final int ZOOM_TO = 12;
+  private static final int ZOOM_BY = 13;
 
   private final Map<String, Integer> MAP_TYPES = MapBuilder.of(
       "standard", GoogleMap.MAP_TYPE_NORMAL,
@@ -270,6 +273,7 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
     Double latDelta;
     float bearing;
     float angle;
+    float zoom;
     ReadableMap region;
     ReadableMap camera;
 
@@ -349,6 +353,28 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
       case SET_INDOOR_ACTIVE_LEVEL_INDEX:
         view.setIndoorActiveLevelIndex(args.getInt(0));
         break;
+
+      case ZOOM_IN:
+        duration = args.getInt(0);
+        view.zoomIn(duration);
+        break;
+
+      case ZOOM_OUT:
+        duration = args.getInt(0);
+        view.zoomOut(duration);
+        break;
+
+      case ZOOM_TO:
+        zoom = (float)args.getDouble(0);
+        duration = args.getInt(1);
+        view.zoomTo(zoom, duration);
+        break;
+
+      case ZOOM_BY:
+        zoom = (float)args.getDouble(0);
+        duration = args.getInt(1);
+        view.zoomBy(zoom, duration);
+        break;
     }
   }
 
@@ -403,7 +429,11 @@ public class AirMapManager extends ViewGroupManager<AirMapView> {
 
     map.putAll(MapBuilder.of(
       "setMapBoundaries", SET_MAP_BOUNDARIES,
-      "setIndoorActiveLevelIndex", SET_INDOOR_ACTIVE_LEVEL_INDEX
+      "setIndoorActiveLevelIndex", SET_INDOOR_ACTIVE_LEVEL_INDEX,
+      "zoomIn", ZOOM_IN,
+      "zoomOut", ZOOM_OUT,
+      "zoomTo", ZOOM_TO,
+      "zoomBy", ZOOM_BY
     ));
 
     return map;
